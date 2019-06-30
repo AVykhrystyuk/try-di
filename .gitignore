@@ -1,0 +1,24 @@
+# Dependency directories
+node_modules
+flow-typed
+
+# Logs
+npm-debug.log
+
+# Build results
+dist
+
+# Local development
+*.env
+*.dev
+.DS_Store
+
+# IDE
+.idea
+.vscode/*
+!.vscode/settings.json
+
+# Test coverage
+.final_coverage
+/coverage
+.coveralls.yml
