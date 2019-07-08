@@ -1,12 +1,13 @@
-export class Foo {
-    private bar = 'bar'
-    getBar = () => this.bar;
-    setBar = (value: string) => { this.bar = value; }
-}
+import { Foo } from "./foo";
+import { Baz } from "./baz";
+
+export let y = {
+    ...{ some: "value" }
+};
 
 export const foo = new Foo();
 foo.setBar('123');
 
-export let y = {
-     ...{ some: "value" }
-};
+// export const baz = new Baz();
+
+export { Foo };
