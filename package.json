@@ -5,18 +5,21 @@
   "author": "Alexey Vykhrystyuk <AVykhrystyuk@gmail.com>",
   "license": "ISC",
   "main": "dist/index.cjs.js",
-  "module": "dist/index.es.js",
+  "module": "dist/index.es2019.js",
   "typings": "dist/index.d.ts",
   "sideEffects": false,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
-    "build": "run-s build:clean build:types bundle:rollup build:babel",
+    "build": "run-s build:clean build:types bundle:rollup",
+    "build:prod": "BABEL_ENV=production run-s build:clean build:types bundle:rollup",
     "build:clean": "rimraf dist",
     "build:types": "tsc --emitDeclarationOnly",
-    "build:babel": "babel src --out-dir dist --extensions \".ts,.tsx\" ",
-    "bundle:rollup": "rollup -c"
+    "bundle:rollup": "run-s bundle:rollup:es5 bundle:rollup:cjs bundle:rollup:es2019",
+    "bundle:rollup:es5": "BUILD_TYPE=es5 rollup -c",
+    "bundle:rollup:cjs": "BUILD_TYPE=cjs rollup -c",
+    "bundle:rollup:es2019": "BUILD_TYPE=es2019 rollup -c"
   },
   "keywords": [
     "dependency injection container",
@@ -36,7 +39,6 @@
     "@babel/cli": "^7.5.0",
     "@babel/core": "^7.5.0",
     "@babel/plugin-proposal-class-properties": "^7.5.0",
-    "@babel/plugin-proposal-object-rest-spread": "^7.5.0",
     "@babel/preset-env": "^7.5.0",
     "@babel/preset-typescript": "^7.3.3",
     "npm-run-all": "^4.1.5",
@@ -44,6 +46,7 @@
     "rollup": "^1.16.3",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^5.1.1",
     "typescript": "^3.5.2"
   }
 }
