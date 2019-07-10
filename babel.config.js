@@ -22,14 +22,22 @@ module.exports = (api) => {
 };
 
 function getDefaultConfig(isProduction) {
+  const commonPresets = [
+    '@babel/preset-typescript'
+  ];
+
+  const commonPlugins = [
+    ["@babel/plugin-proposal-class-properties", { "loose": true }]
+  ];
+
   switch (BUILD_TYPE) {
     case 'cjs': /* lts nodejs */
       return {
         presets: [
-          '@babel/preset-typescript',
+          ...commonPresets,
           ['@babel/preset-env', {
             debug: !isProduction,
-            // loose: true,
+            loose: true,
             modules: false,
             targets: {
               node: '8',
@@ -37,7 +45,7 @@ function getDefaultConfig(isProduction) {
           }],
         ],
         plugins: [
-          '@babel/plugin-proposal-class-properties',
+          ...commonPlugins,
         ]
       };
 
@@ -45,15 +53,15 @@ function getDefaultConfig(isProduction) {
     case 'es5': /* legacy browsers */
       return {
         presets: [
-          '@babel/preset-typescript',
+          ...commonPresets,
           ['@babel/preset-env', {
             modules: false,
             debug: !isProduction,
-            // loose: true,
+            loose: true,
           }],
         ],
         plugins: [
-          '@babel/plugin-proposal-class-properties'
+          ...commonPlugins,
         ],
       };
 
@@ -62,10 +70,10 @@ function getDefaultConfig(isProduction) {
       /* es2019 - modern browsers */
       return {
         presets: [
-          '@babel/preset-typescript'
+          ...commonPresets,
         ],
         plugins: [
-          '@babel/plugin-proposal-class-properties',
+          ...commonPlugins,
         ],
       };
   }
