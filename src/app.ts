@@ -1,8 +1,8 @@
-import { Foo } from "./foo";
-import { Baz } from "./baz";
+import { Foo } from './foo';
+import { Baz } from './baz';
 
 export let y = {
-    ...{ some: "value" }
+  ...{ some: 'value' },
 };
 
 export const foo = new Foo();

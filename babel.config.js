@@ -1,6 +1,7 @@
+/* eslint-disable no-console */
 const { BUILD_TYPE } = process.env;
 
-module.exports = (api) => {
+module.exports = api => {
   console.log('api.env()', api.env());
   const isProduction = api.env('production');
 
@@ -17,54 +18,54 @@ module.exports = (api) => {
 
   return {
     ...getDefaultConfig(isProduction),
-    ...overrides
+    ...overrides,
   };
 };
 
 function getDefaultConfig(isProduction) {
   const commonPresets = [
-    '@babel/preset-typescript'
+    '@babel/preset-typescript',
   ];
 
   const commonPlugins = [
-    ["@babel/plugin-proposal-class-properties", { "loose": true }]
+    ['@babel/plugin-proposal-class-properties', { loose: true }],
   ];
 
   switch (BUILD_TYPE) {
-    case 'cjs': /* lts nodejs */
+    /* lts nodejs */
+    case 'cjs':
       return {
         presets: [
           ...commonPresets,
           ['@babel/preset-env', {
-            debug: !isProduction,
-            loose: true,
-            modules: false,
-            targets: {
-              node: '8',
-            }
-          }],
-        ],
-        plugins: [
-          ...commonPlugins,
-        ]
-      };
-
-
-    case 'es5': /* legacy browsers */
-      return {
-        presets: [
-          ...commonPresets,
-          ['@babel/preset-env', {
-            modules: false,
-            debug: !isProduction,
-            loose: true,
-          }],
+              debug: !isProduction,
+              loose: true,
+              modules: false,
+              targets: {
+                node: '8',
+              },
+            }],
         ],
         plugins: [
           ...commonPlugins,
         ],
       };
 
+    /* legacy browsers */
+    case 'es5':
+      return {
+        presets: [
+          ...commonPresets,
+          ['@babel/preset-env', {
+              modules: false,
+              debug: !isProduction,
+              loose: true,
+            }],
+        ],
+        plugins: [
+          ...commonPlugins,
+        ],
+      };
 
     default:
       /* es2019 - modern browsers */

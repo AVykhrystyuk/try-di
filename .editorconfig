@@ -9,9 +9,9 @@ charset = utf-8
 indent_style = space
 trim_trailing_whitespace = true
 max_line_length = 120
-
-# JavaScript code style settings
-[*.js]
-indent_size = 2
 end_of_line = lf
 insert_final_newline = true
+
+# JavaScript code style settings
+[*.{js,json}]
+indent_size = 2

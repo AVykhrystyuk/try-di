@@ -1,7 +1,8 @@
+/* eslint-disable import/no-default-export */
 // import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
-import { terser } from "rollup-plugin-terser";
+import { terser } from 'rollup-plugin-terser';
 
 import pkg from './package.json';
 
@@ -11,9 +12,7 @@ const IS_ES5 = BUILD_TYPE === 'es5';
 const IS_ES2019 = BUILD_TYPE === 'es2019';
 const ES5_BUNDLE_PATH = 'dist/es5';
 
-const extensions = [
-  '.js', '.ts',
-];
+const extensions = ['.js', '.ts'];
 
 export default {
   input: 'src/index.ts',
@@ -34,18 +33,18 @@ function buildOutput() {
     return [
       /* iife */
       {
-        file:  `${ES5_BUNDLE_PATH}/index.iife${suffix}.js`,
-        format: "iife",
-        name: "DI",
-        sourcemap: true
+        file: `${ES5_BUNDLE_PATH}/index.iife${suffix}.js`,
+        format: 'iife',
+        name: 'DI',
+        sourcemap: true,
       },
 
       /* esm */
       {
         file: `${ES5_BUNDLE_PATH}/index.esm${suffix}.js`,
-        format: "es",
-        sourcemap: true
-      }
+        format: 'es',
+        sourcemap: true,
+      },
     ];
   }
 
@@ -54,9 +53,9 @@ function buildOutput() {
       /* esm */
       {
         file: pkg.module,
-        format: "es",
-        sourcemap: true
-      }
+        format: 'es',
+        sourcemap: true,
+      },
     ];
   }
 
@@ -64,9 +63,9 @@ function buildOutput() {
     /* cjs */
     {
       file: pkg.main,
-      format: "cjs",
-      sourcemap: true
-    }
+      format: 'cjs',
+      sourcemap: true,
+    },
   ];
 }
 
@@ -88,7 +87,7 @@ function buildPlugins() {
   if (IS_ES5) {
     plugins.push(
       terser({
-        include: [/^.+\.min\.js$/]
+        include: [/^.+\.min\.js$/],
       })
     );
   }
