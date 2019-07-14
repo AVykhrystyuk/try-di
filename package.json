@@ -15,14 +15,14 @@
     "lint": "run-p lint-eslint",
     "lint-eslint": "eslint --cache --ext .js,.ts ./",
     "format-prettier": "prettier --write '**/*.{ts,js,md,yaml,yml}'",
-    "build": "run-s build:clean build:types bundle:rollup",
-    "build:prod": "cross-env BABEL_ENV=production run-s build:clean build:types bundle:rollup",
+    "build": "run-s build:clean build:types bundle-rollup",
+    "build:prod": "cross-env BABEL_ENV=production run-s build:clean build:types bundle-rollup",
     "build:clean": "rimraf dist",
     "build:types": "tsc --emitDeclarationOnly",
-    "bundle:rollup": "run-s bundle:rollup:es5 bundle:rollup:cjs bundle:rollup:es2019",
-    "bundle:rollup:es5": "cross-env BUILD_TYPE=es5 rollup -c",
-    "bundle:rollup:cjs": "cross-env BUILD_TYPE=cjs rollup -c",
-    "bundle:rollup:es2019": "cross-env BUILD_TYPE=es2019 rollup -c"
+    "bundle-rollup": "run-p bundle-rollup:es5 bundle-rollup:cjs bundle-rollup:es2019",
+    "bundle-rollup:es5": "cross-env BUILD_TYPE=es5 rollup -c",
+    "bundle-rollup:cjs": "cross-env BUILD_TYPE=cjs rollup -c",
+    "bundle-rollup:es2019": "cross-env BUILD_TYPE=es2019 rollup -c"
   },
   "keywords": [
     "dependency injection container",
