@@ -13,5 +13,5 @@ end_of_line = lf
 insert_final_newline = true
 
 # JavaScript code style settings
-[*.{js,json}]
+[*.{js,json,ts}]
 indent_size = 2
