@@ -1,7 +1,21 @@
-export * from './app';
+import { Container, FactoryRegistry } from './interfaces';
+import { ContainerImpl, createModernFactoryRegistry, createLegacyFactoryRegistry } from './impl';
 
-const item = new Object();
-console.log(item);
+function createFactoryRegistry(): FactoryRegistry {
+  if (process.env.BUILD_TYPE !== 'es5') {
+    return createModernFactoryRegistry();
+  }
 
-const t = '1' + 1;
-console.log(t);
+  if (process.env.BUILD_TYPE === 'es5') {
+    return createLegacyFactoryRegistry();
+  }
+
+  throw new Error('FactoryRegistry mode could not be determined.');
+}
+
+export function createContainer(): Container {
+  const factoryRegistry = createFactoryRegistry();
+  return new ContainerImpl(factoryRegistry);
+}
+
+export * from './interfaces';
