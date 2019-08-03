@@ -2,80 +2,51 @@
 const { BUILD_TYPE } = process.env;
 
 module.exports = api => {
-  console.log('api.env()', api.env());
+  console.log('process.env.BUILD_TYPE ->', BUILD_TYPE);
+  console.log('api.env() ->', api.env());
   const isProduction = api.env('production');
+  const isTest = api.env('test');
 
   api.cache(true);
 
-  // const test = {
-  //   presets: [],
-  //   plugins: []
-  // };
-
-  const overrides = {
-    // env: { test }
-  };
-
-  return {
-    ...getDefaultConfig(isProduction),
-    ...overrides,
-  };
+  return buildConfig({ isProduction, isTest, buildType: BUILD_TYPE });
 };
 
-function getDefaultConfig(isProduction) {
-  const commonPresets = [
-    '@babel/preset-typescript',
-  ];
+function buildConfig(options) {
+  return {
+    presets: [
+      '@babel/preset-typescript',
+      buildPresetEnv(options),
+    ].filter(Boolean),
+    plugins: [
+      ['@babel/plugin-proposal-class-properties', { loose: true }],
+    ],
+  };
+}
 
-  const commonPlugins = [
-    ['@babel/plugin-proposal-class-properties', { loose: true }],
-  ];
-
-  switch (BUILD_TYPE) {
+function buildPresetEnv({ buildType, isProduction, isTest }) {
+  switch (buildType) {
     /* lts nodejs */
     case 'cjs':
-      return {
-        presets: [
-          ...commonPresets,
-          ['@babel/preset-env', {
-              debug: !isProduction,
-              loose: true,
-              modules: false,
-              targets: {
-                node: '8',
-              },
-            }],
-        ],
-        plugins: [
-          ...commonPlugins,
-        ],
-      };
+      return ['@babel/preset-env', {
+        debug: !isProduction,
+        loose: true,
+        modules: isTest ? 'commonjs' : 'false',
+        targets: {
+          node: '8',
+        },
+      }];
 
     /* legacy browsers */
     case 'es5':
-      return {
-        presets: [
-          ...commonPresets,
-          ['@babel/preset-env', {
-              modules: false,
-              debug: !isProduction,
-              loose: true,
-            }],
-        ],
-        plugins: [
-          ...commonPlugins,
-        ],
-      };
+      return ['@babel/preset-env', {
+        debug: !isProduction,
+        loose: true,
+        modules: false,
+      }];
 
     default:
       /* es2019 - modern browsers */
-      return {
-        presets: [
-          ...commonPresets,
-        ],
-        plugins: [
-          ...commonPlugins,
-        ],
-      };
+      return null;
   }
 }
