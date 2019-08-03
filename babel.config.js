@@ -1,15 +1,15 @@
 /* eslint-disable no-console */
-const { BUILD_TYPE } = process.env;
+const { BUILD_TYPE, BABEL_COVERAGE } = process.env;
 
 module.exports = api => {
-  console.log('process.env.BUILD_TYPE ->', BUILD_TYPE);
-  console.log('api.env() ->', api.env());
-  const isProduction = api.env('production');
-  const isTest = api.env('test');
+  console.log('options ->', { apiEnv: api.env(), BUILD_TYPE, BABEL_COVERAGE });
 
-  api.cache(true);
-
-  return buildConfig({ isProduction, isTest, buildType: BUILD_TYPE });
+  return buildConfig({
+    isProduction: api.env('production'),
+    isTest: api.env('test'),
+    buildType: BUILD_TYPE,
+    includeCoverage: BABEL_COVERAGE === 'true',
+  });
 };
 
 function buildConfig(options) {
@@ -20,7 +20,8 @@ function buildConfig(options) {
     ].filter(Boolean),
     plugins: [
       ['@babel/plugin-proposal-class-properties', { loose: true }],
-    ],
+      options.includeCoverage ? ['babel-plugin-istanbul'] : null,
+    ].filter(Boolean),
   };
 }
 

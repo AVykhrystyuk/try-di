@@ -9,15 +9,21 @@
   "typings": "dist/index.d.ts",
   "sideEffects": false,
   "scripts": {
-    "test": "cross-env BUILD_TYPE=cjs BABEL_ENV=test mocha -r ./babel-register.js 'src/**/*.spec.ts'",
-    "test:debug": "npm test -- --inspect-brk=9300",
+    "test": "npm run test-coverage",
+    "test-coverage": "cross-env BUILD_TYPE=cjs BABEL_ENV=test BABEL_COVERAGE=true nyc mocha 'src/**/*.spec.ts'",
+    "test-code": "cross-env BUILD_TYPE=cjs BABEL_ENV=test mocha -r ./babel-register.js 'src/**/*.spec.ts'",
+    "test-code:debug": "npm run test-code -- --inspect-brk=9300",
+    "test:send-coverage-to-coveralls": "cat coverage/lcov.info | coveralls && npm run clean:coverage",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
+    "clean": "run-p build:clean clean:coverage clean:modules",
+    "clean:modules": "rimraf node_modules",
+    "clean:coverage": "rimraf coverage .nyc_output",
     "lint": "run-p lint-eslint",
     "lint-eslint": "eslint --cache --ext .js,.ts ./",
     "format-prettier": "prettier --write '**/*.{ts,js,md}'",
-    "build": "run-s build:clean build:types bundle-rollup",
-    "build:prod": "cross-env BABEL_ENV=production run-s build:clean build:types bundle-rollup",
+    "build": "run-s build:clean lint build:types bundle-rollup",
+    "build:prod": "cross-env BABEL_ENV=production run-s build:clean lint build:types bundle-rollup",
     "build:clean": "rimraf dist",
     "build:types": "tsc --emitDeclarationOnly",
     "bundle-rollup": "run-p bundle-rollup:es5 bundle-rollup:cjs bundle-rollup:es2019",
@@ -49,6 +55,8 @@
     "@types/mocha": "^5.2.7",
     "@typescript-eslint/eslint-plugin": "^1.13.0",
     "@typescript-eslint/parser": "^1.13.0",
+    "babel-plugin-istanbul": "^5.2.0",
+    "coveralls": "^3.0.5",
     "cross-env": "^5.2.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.2.0",
@@ -59,6 +67,7 @@
     "lint-staged": "^9.2.1",
     "mocha": "^6.2.0",
     "npm-run-all": "^4.1.5",
+    "nyc": "^14.1.1",
     "prettier": "^1.18.2",
     "rimraf": "^2.6.3",
     "rollup": "^1.18.0",
@@ -82,5 +91,28 @@
       "eslint --fix",
       "git add"
     ]
+  },
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "exclude": [
+      "src/**/*.spec.ts"
+    ],
+    "include": [
+      "src/**/*.ts"
+    ],
+    "require": [
+      "./babel-register.js"
+    ],
+    "reporter": [
+      "lcovonly",
+      "text",
+      "json"
+    ],
+    "sourceMap": false,
+    "instrument": false,
+    "cache": true,
+    "all": true
   }
 }
