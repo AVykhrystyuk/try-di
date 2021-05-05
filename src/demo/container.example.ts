@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, class-methods-use-this */
 
-import { Fish, Milk, Animal, Cat, Obj } from './types';
-import { Container } from '../interfaces';
+import { Fish, Milk, Animal, Cat, Dog, Obj, Bar, Foo, Meat, Tiger } from './types';
+import { Container, Token } from '../interfaces';
 
 declare const container: Container;
 
@@ -9,38 +9,26 @@ const fishByClass = container.resolve(Fish);
 const fishByString = container.resolve<Fish>('string');
 const fishByString2 = container.resolve('string');
 
-// const ctor2: InstanceType<typeof Fish> = new Fish();
-// const ctor: InstanceType<Fish> = function factory__(...args: any[]) { return new Fish(); };
-// console.log(ctor, ctor2);
+container
+  .useClass({ for: Animal, use: Cat, inject: [Fish, Milk] })
+  .useClass({ for: 'Fish' as Token<Fish>, use: Fish })
+  .useClass({ for: Obj, use: Fish })
+  .useClass({ for: Foo, use: Obj }) // wrong!
+  .useClass({ for: Animal, use: Cat }) // wrong! // inject: [Fish, Milk]
+  .useClass({ for: Animal, use: Cat, inject: [Fish, Milk] })
+  .useClass({ for: Animal, use: Cat, inject: ['Fish' as Token<Fish>, Milk] })
+  .useClass({ for: Animal, use: Dog }) // wrong! // inject: [Meat]
+  .useClass({ for: Animal, use: Dog, inject: [Meat] })
+  .useClass({ for: Animal, use: Tiger, inject: [Fish] }) // wrong! // inject: [Fish, Milk, Meat]
+  .useClass({ for: Animal, use: Tiger, inject: [Fish, Milk, Meat] })
 
-container.register('string', () => new Fish());
-container.register(Fish, () => new Fish());
-container.register(Milk, () => new Milk());
-container.register(Animal, r => new Cat(r.resolve(Fish), r.resolve(Milk)));
+  .useValue({ for: 'string', use: new Fish() })
+  .useValue({ for: Fish, use: new Fish() })
+  .useValue({ for: Animal, use: new Fish() }) // wrong!
 
-// container.register(Milk, () => new Milk()).singleton();
-// container.register(Animal, r => new Cat(r.resolve(Fish), r.resolve(Milk))).singleton();
-
-// container.registserClass(Animal, Cat, [Fish, Milk]);
-
-// container.registserClass(Animal, Cat).singleton();
-// container.registserClass(Animal, Cat).singleton().injecting(Fish, Milk); -- X
-// container.registserClass(Animal, Cat).injecting(Fish, Milk).singleton();
-
-// container.register({
-//   token: Animal,
-//   resolve: Cat,
-//   deps: [Fish, Milk],
-//   singleton: true,
-// });
-
-/*
-  { provide: APP_CONFIG, useValue: HERO_DI_CONFIG },
-  { provide: AbstractHeroService, useClass: HeroService },
-  {
-    provide: HeroService,
-    useFactory: heroServiceFactory,
-    deps: [Logger, UserService]
-  };
-
-*/
+  .useFactory({ for: 'string', use: () => new Fish() })
+  .useFactory({ for: Animal, use: () => new Fish() }) // wrong!
+  .useFactory({ for: Fish, use: () => new Fish(), singleton: true })
+  .useFactory({ for: Milk, use: () => new Milk() })
+  .useFactory({ for: Animal, use: r => new Cat(r.resolve(Fish), r.resolve(Milk)) })
+  .useFactory({ for: Foo, use: r => new Obj() }); // wrong!
