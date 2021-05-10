@@ -1,8 +1,10 @@
 /* eslint-disable no-console */
+
 const { BUILD_TYPE, BABEL_COVERAGE } = process.env;
+const { node: NODE_VERSION } = process.versions;
 
 module.exports = api => {
-  console.log('options ->', { apiEnv: api.env(), BUILD_TYPE, BABEL_COVERAGE });
+  console.log('babel config options →', { apiEnv: api.env(), BUILD_TYPE, BABEL_COVERAGE, NODE_VERSION });
 
   return buildConfig({
     isProduction: api.env('production'),
@@ -33,8 +35,7 @@ function buildPresetEnv({ buildType, isProduction, isTest }) {
         loose: true,
         modules: isTest ? 'commonjs' : false,
         targets: {
-          // TODO: is possible to take node version from travis script?
-          node: '14',
+          node: 'current', // the same as process.versions.node
         },
       }];
 
