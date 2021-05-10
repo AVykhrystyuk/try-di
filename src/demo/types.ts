@@ -15,7 +15,7 @@ export class Meat extends Obj {
 }
 
 export class Animal extends Obj {
-  private type: string = 'asd';
+  private type: string = 'animal';
 }
 
 export class Cat extends Animal {

@@ -18,25 +18,25 @@ import {
 export class ContainerImpl extends Container {
   public useClass<T, TCtor extends Constructor1<T, TCtorArg1>, TCtorArg1>(
     provider: ClassProvider1<T, TCtor, TCtorArg1>
-  ): this;
+  ): Container;
 
   public useClass<T, TCtor extends Constructor2<T, TCtorArg1, TCtorArg2>, TCtorArg1, TCtorArg2>(
     provider: ClassProvider2<T, TCtor, TCtorArg1, TCtorArg2>
-  ): this;
+  ): Container;
 
   public useClass<T, TCtor extends Constructor3<T, TCtorArg1, TCtorArg2, TCtorArg3>, TCtorArg1, TCtorArg2, TCtorArg3>(
     provider: ClassProvider3<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3>
-  ): this;
+  ): Container;
 
-  public useClass(provider: any): this {
+  public useClass(provider: any): Container {
     return this;
   }
 
-  public useFactory<T, TResult extends T>(provider: ResolveProvider<T, TResult>): this {
+  public useFactory<T, TResult extends T>(provider: ResolveProvider<T, TResult>): Container {
     return this;
   }
 
-  public useValue<T, TResult extends T>(provider: ValueProvider<T, TResult>): this {
+  public useValue<T, TResult extends T>(provider: ValueProvider<T, TResult>): Container {
     return this;
   }
 

@@ -5,11 +5,11 @@ import { ClassProvider1, ClassProvider2, ClassProvider3, ResolveProvider, ValueP
 export abstract class Container extends Resolver {
   public abstract useClass<T, TCtor extends Constructor1<T, TCtorArg1>, TCtorArg1>(
     provider: ClassProvider1<T, TCtor, TCtorArg1>
-  ): this;
+  ): Container;
 
   public abstract useClass<T, TCtor extends Constructor2<T, TCtorArg1, TCtorArg2>, TCtorArg1, TCtorArg2>(
     provider: ClassProvider2<T, TCtor, TCtorArg1, TCtorArg2>
-  ): this;
+  ): Container;
 
   public abstract useClass<
     T,
@@ -17,10 +17,10 @@ export abstract class Container extends Resolver {
     TCtorArg1,
     TCtorArg2,
     TCtorArg3
-  >(provider: ClassProvider3<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3>): this;
+  >(provider: ClassProvider3<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3>): Container;
 
-  public abstract useFactory<T, TResult extends T>(provider: ResolveProvider<T, TResult>): this;
-  public abstract useValue<T, TResult extends T>(provider: ValueProvider<T, TResult>): this;
+  public abstract useFactory<T, TResult extends T>(provider: ResolveProvider<T, TResult>): Container;
+  public abstract useValue<T, TResult extends T>(provider: ValueProvider<T, TResult>): Container;
 
   public abstract tryVerifyAll(): boolean;
 
