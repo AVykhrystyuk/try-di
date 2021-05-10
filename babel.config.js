@@ -1,8 +1,10 @@
 /* eslint-disable no-console */
+
 const { BUILD_TYPE, BABEL_COVERAGE } = process.env;
+const { node: NODE_VERSION } = process.versions;
 
 module.exports = api => {
-  console.log('options ->', { apiEnv: api.env(), BUILD_TYPE, BABEL_COVERAGE });
+  console.log('babel config options →', { apiEnv: api.env(), BUILD_TYPE, BABEL_COVERAGE, NODE_VERSION });
 
   return buildConfig({
     isProduction: api.env('production'),
@@ -19,8 +21,7 @@ function buildConfig(options) {
       buildPresetEnv(options),
     ].filter(Boolean),
     plugins: [
-      ['@babel/plugin-proposal-class-properties', { loose: true }],
-      options.includeCoverage ? ['babel-plugin-istanbul'] : null,
+      options.includeCoverage && ['babel-plugin-istanbul'],
     ].filter(Boolean),
   };
 }
@@ -32,9 +33,9 @@ function buildPresetEnv({ buildType, isProduction, isTest }) {
       return ['@babel/preset-env', {
         debug: !isProduction,
         loose: true,
-        modules: isTest ? 'commonjs' : 'false',
+        modules: isTest ? 'commonjs' : false,
         targets: {
-          node: '8',
+          node: 'current', // the same as process.versions.node
         },
       }];
 
@@ -48,6 +49,6 @@ function buildPresetEnv({ buildType, isProduction, isTest }) {
 
     default:
       /* es2019 - modern browsers */
-      return null;
+      return undefined;
   }
 }

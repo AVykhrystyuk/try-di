@@ -46,7 +46,6 @@ export class ContainerImpl extends Container {
     super();
   }
 
-  /** @deprecated */
   public register<T>(token: Token<T>, factory: ResolveFactoryFunction<T>): this {
     if (this.factoryRegistry.hasFactory(token)) {
       const displayToken = this.getTokenDisplayName(token);

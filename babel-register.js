@@ -1,4 +1,5 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 require('@babel/register')({
   extensions: ['.js', '.ts'],
 });

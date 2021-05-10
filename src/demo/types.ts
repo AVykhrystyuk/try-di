@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable max-classes-per-file */
+
 export class Obj {
   public isObject = true;
 }
@@ -15,7 +18,7 @@ export class Meat extends Obj {
 }
 
 export class Animal extends Obj {
-  private type: string = 'animal';
+  private type = 'animal';
 }
 
 export class Cat extends Animal {

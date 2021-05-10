@@ -1,19 +1,23 @@
 /* eslint-disable import/no-default-export */
+
 // import commonjs from 'rollup-plugin-commonjs';
-import nodeResolve from 'rollup-plugin-node-resolve';
-import babel from 'rollup-plugin-babel';
+import nodeResolve from '@rollup/plugin-node-resolve';
+import babel from '@rollup/plugin-babel';
 import { terser } from 'rollup-plugin-terser';
-import replace from 'rollup-plugin-replace';
+import replace from '@rollup/plugin-replace';
 
 import pkg from './package.json';
 
+const extensions = ['.js', '.ts'];
+
 const { BUILD_TYPE, BABEL_ENV } = process.env;
-const IS_PRODUCTION = BABEL_ENV === 'production';
-const IS_ES5 = BUILD_TYPE === 'es5';
-const IS_ES2019 = BUILD_TYPE === 'es2019';
+
+const PRODUCTION = BABEL_ENV === 'production';
+
+const ES5 = BUILD_TYPE === 'es5';
 const ES5_BUNDLE_PATH = 'dist/es5';
 
-const extensions = ['.js', '.ts'];
+const ES2019 = BUILD_TYPE === 'es2019';
 
 export default {
   input: 'src/index.ts',
@@ -24,20 +28,41 @@ export default {
   // https://rollupjs.org/guide/en#external-e-external
   external: [],
 
-  plugins: buildPlugins(),
+  plugins: [
+    // Allows node_modules resolution
+    nodeResolve({ extensions }),
+
+    // Allow bundling cjs modules. Rollup doesn't understand cjs
+    // commonjs(),
+
+    // Compile TypeScript/JavaScript files
+    babel({
+      extensions,
+      include: ['src/**/*'],
+      babelHelpers: 'bundled',
+    }),
+
+    replace({
+      preventAssignment: true,
+      values: {
+        'process.env.NODE_ENV': JSON.stringify(BABEL_ENV),
+        'process.env.BUILD_TYPE': JSON.stringify(BUILD_TYPE),
+      }
+    })
+  ],
 };
 
 function buildOutput() {
-  const suffix = IS_PRODUCTION ? '.min' : '';
-
-  if (IS_ES5) {
+  if (ES5) {
+    const suffix = PRODUCTION ? '.min' : '';
     return [
       /* iife */
       {
         file: `${ES5_BUNDLE_PATH}/index.iife${suffix}.js`,
         format: 'iife',
-        name: 'DI',
+        name: 'TRY_DI',
         sourcemap: true,
+        plugins: [terser()],
       },
 
       /* esm */
@@ -45,11 +70,12 @@ function buildOutput() {
         file: `${ES5_BUNDLE_PATH}/index.esm${suffix}.js`,
         format: 'es',
         sourcemap: true,
+        plugins: [terser()],
       },
     ];
   }
 
-  if (IS_ES2019) {
+  if (ES2019) {
     return [
       /* esm */
       {
@@ -68,35 +94,4 @@ function buildOutput() {
       sourcemap: true,
     },
   ];
-}
-
-function buildPlugins() {
-  const plugins = [
-    // Allows node_modules resolution
-    nodeResolve({ extensions }),
-
-    // Allow bundling cjs modules. Rollup doesn't understand cjs
-    // commonjs(),
-
-    // Compile TypeScript/JavaScript files
-    babel({
-      extensions,
-      include: ['src/**/*'],
-    }),
-
-    replace({
-      'process.env.NODE_ENV': JSON.stringify(BABEL_ENV),
-      'process.env.BUILD_TYPE': JSON.stringify(BUILD_TYPE),
-    })
-  ];
-
-  if (IS_ES5) {
-    plugins.push(
-      terser({
-        include: [/^.+\.min\.js$/],
-      })
-    );
-  }
-
-  return plugins;
 }
