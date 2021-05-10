@@ -1,11 +1,26 @@
-import { ConstructorToken } from './constructor';
+import { Constructor1, Constructor2, Constructor3 } from './constructor';
 import { Resolver } from './resolver';
-import { SymbolToken } from './symbol-token';
-import { FactoryFunction } from './factory-function';
+import { ClassProvider1, ClassProvider2, ClassProvider3, ResolveProvider, ValueProvider } from './providers';
 
 export abstract class Container extends Resolver {
-  public abstract register<T>(token: ConstructorToken<T>, factory: FactoryFunction<T>): this;
-  public abstract register<T>(token: SymbolToken, factory: FactoryFunction<T>): this;
+  public abstract useClass<T, TCtor extends Constructor1<T, TCtorArg1>, TCtorArg1>(
+    provider: ClassProvider1<T, TCtor, TCtorArg1>
+  ): Container;
+
+  public abstract useClass<T, TCtor extends Constructor2<T, TCtorArg1, TCtorArg2>, TCtorArg1, TCtorArg2>(
+    provider: ClassProvider2<T, TCtor, TCtorArg1, TCtorArg2>
+  ): Container;
+
+  public abstract useClass<
+    T,
+    TCtor extends Constructor3<T, TCtorArg1, TCtorArg2, TCtorArg3>,
+    TCtorArg1,
+    TCtorArg2,
+    TCtorArg3
+  >(provider: ClassProvider3<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3>): Container;
+
+  public abstract useFactory<T, TResult extends T>(provider: ResolveProvider<T, TResult>): Container;
+  public abstract useValue<T, TResult extends T>(provider: ValueProvider<T, TResult>): Container;
 
   public abstract tryVerifyAll(): boolean;
 
@@ -19,7 +34,7 @@ export abstract class Container extends Resolver {
    * }
    * catch (err) {
    *   if (err instanceof DependencyInjectionError) {
-   *     // do something about it
+   *     // TODO: handle the error
    *   }
    * }
    *

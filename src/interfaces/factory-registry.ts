@@ -1,12 +1,19 @@
-import { FactoryFunction } from './factory-function';
+import { ResolveFactoryFunction } from './resolve-factory-function';
+import { Token as RegistrationToken } from './tokens';
 
-export type Token = unknown;
+type Token = RegistrationToken<unknown>;
+
+export type FactoryRegistryTokenCallback = (
+  factory: ResolveFactoryFunction<Token>,
+  token: Token,
+  registry: FactoryRegistry
+) => void;
 
 export interface FactoryRegistry {
   getTokens(): Token[];
   hasFactory(token: Token): boolean;
-  setFactory(token: Token, factory: FactoryFunction<Token>): void;
-  getFactory(token: Token): FactoryFunction<Token> | undefined;
+  setFactory(token: Token, factory: ResolveFactoryFunction<unknown>): void;
+  getFactory(token: Token): ResolveFactoryFunction<unknown> | undefined;
 
-  forEach(callback: (factory: FactoryFunction<Token>, token: Token, registry: FactoryRegistry) => void): void;
+  forEach(callback: FactoryRegistryTokenCallback): void;
 }

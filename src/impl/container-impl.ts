@@ -1,24 +1,53 @@
 import {
-  Constructor,
-  ConstructorToken,
   Container,
   Resolver,
-  FactoryFunction,
-  SymbolToken,
+  ResolveFactoryFunction,
   FactoryRegistry,
   DependencyInjectionError,
+  Token,
+  Constructor1,
+  Constructor2,
+  Constructor3,
+  ClassProvider1,
+  ClassProvider2,
+  ClassProvider3,
+  ResolveProvider,
+  ValueProvider,
 } from '../interfaces';
 
 export class ContainerImpl extends Container {
+  public useClass<T, TCtor extends Constructor1<T, TCtorArg1>, TCtorArg1>(
+    provider: ClassProvider1<T, TCtor, TCtorArg1>
+  ): Container;
+
+  public useClass<T, TCtor extends Constructor2<T, TCtorArg1, TCtorArg2>, TCtorArg1, TCtorArg2>(
+    provider: ClassProvider2<T, TCtor, TCtorArg1, TCtorArg2>
+  ): Container;
+
+  public useClass<T, TCtor extends Constructor3<T, TCtorArg1, TCtorArg2, TCtorArg3>, TCtorArg1, TCtorArg2, TCtorArg3>(
+    provider: ClassProvider3<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3>
+  ): Container;
+
+  public useClass(provider: any): Container {
+    return this;
+  }
+
+  public useFactory<T, TResult extends T>(provider: ResolveProvider<T, TResult>): Container {
+    return this;
+  }
+
+  public useValue<T, TResult extends T>(provider: ValueProvider<T, TResult>): Container {
+    return this;
+  }
+
   public readonly resolver: Resolver = this;
 
   public constructor(private readonly factoryRegistry: FactoryRegistry) {
     super();
   }
 
-  public register<T>(token: ConstructorToken<T>, factory: FactoryFunction<T>): this;
-  public register<T>(token: SymbolToken, factory: FactoryFunction<T>): this;
-  public register<T>(token: Constructor<T> | SymbolToken, factory: FactoryFunction<T>): this {
+  /** @deprecated */
+  public register<T>(token: Token<T>, factory: ResolveFactoryFunction<T>): this {
     if (this.factoryRegistry.hasFactory(token)) {
       const displayToken = this.getTokenDisplayName(token);
       throw new DependencyInjectionError(`Factory is already registered for '${displayToken}'`);
@@ -28,9 +57,7 @@ export class ContainerImpl extends Container {
     return this;
   }
 
-  public resolve<T>(token: Constructor<T>): T;
-  public resolve<T>(token: SymbolToken): T;
-  public resolve<T>(token: Constructor<T> | SymbolToken): T {
+  public resolve<T>(token: Token<T>): T {
     const factory = this.factoryRegistry.getFactory(token);
     if (factory == null) {
       const displayToken = this.getTokenDisplayName(token);
@@ -57,7 +84,7 @@ export class ContainerImpl extends Container {
     });
   }
 
-  private getTokenDisplayName<T>(token: Constructor<T> | SymbolToken): string {
+  private getTokenDisplayName<T>(token: Token<T>): string {
     const displayToken = token instanceof Function ? token.name : token.toString();
     return displayToken;
   }

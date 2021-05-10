@@ -56,7 +56,7 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': ['error', 'nofunc'],
 
     // Allow implicit function return type for lambdas
-    '@typescript-eslint/explicit-function-return-type': ['error', { allowTypedFunctionExpressions: true }],
+    '@typescript-eslint/explicit-function-return-type': ['error', { allowExpressions: true }],
 
     // Allow properties in ctors, as it reduces code duplicates
     '@typescript-eslint/no-parameter-properties': ['error', { allows: ['private readonly'] }],
