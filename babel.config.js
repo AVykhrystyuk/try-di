@@ -19,8 +19,7 @@ function buildConfig(options) {
       buildPresetEnv(options),
     ].filter(Boolean),
     plugins: [
-      ['@babel/plugin-proposal-class-properties', { loose: true }],
-      options.includeCoverage ? ['babel-plugin-istanbul'] : null,
+      options.includeCoverage && ['babel-plugin-istanbul'],
     ].filter(Boolean),
   };
 }
@@ -32,9 +31,10 @@ function buildPresetEnv({ buildType, isProduction, isTest }) {
       return ['@babel/preset-env', {
         debug: !isProduction,
         loose: true,
-        modules: isTest ? 'commonjs' : 'false',
+        modules: isTest ? 'commonjs' : false,
         targets: {
-          node: '8',
+          // TODO: is possible to take node version from travis script?
+          node: '14',
         },
       }];
 
@@ -48,6 +48,6 @@ function buildPresetEnv({ buildType, isProduction, isTest }) {
 
     default:
       /* es2019 - modern browsers */
-      return null;
+      return undefined;
   }
 }

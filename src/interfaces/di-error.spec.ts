@@ -16,6 +16,7 @@ describe('DependencyInjectionError', () => {
     assert.equal(error.toString(), 'DependencyInjectionError: Error reason message');
   });
 
+  // eslint-disable-next-line prefer-arrow-callback
   it('`.stack` displays name and the message and the stackTrace', function stackTraceTestCase() {
     const error = new DependencyInjectionError('Error reason message');
 

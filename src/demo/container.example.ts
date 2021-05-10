@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars, class-methods-use-this */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { Fish, Milk, Animal, Cat, Dog, Obj, Bar, Foo, Meat, Tiger } from './types';
 import { Container, Token } from '../interfaces';
@@ -36,6 +36,6 @@ container
   .useFactory({ for: Animal, use: () => new Fish() }) // wrong!
   .useFactory({ for: Fish, use: () => new Fish(), singleton: true })
   .useFactory({ for: Milk, use: () => new Milk() })
-  .useFactory({ for: Animal, use: r => new Cat(r.resolve(Fish), r.resolve(Milk)) })
+  .useFactory({ for: Animal, use: (r) => new Cat(r.resolve(Fish), r.resolve(Milk)) })
   // @ts-expect-error - Type Obj is not assignable to Foo
-  .useFactory({ for: Foo, use: r => new Obj() }); // wrong!
+  .useFactory({ for: Foo, use: (r) => new Obj() }); // wrong!

@@ -16,7 +16,7 @@ export class DependencyInjectionError extends Error {
   }
 }
 
-function defineProperty(obj: any, name: string, value: any): void {
+function defineProperty(obj: unknown, name: string, value: unknown): void {
   Object.defineProperty(obj, name, {
     value,
     enumerable: false, // to keep native Error behavior
