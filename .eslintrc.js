@@ -66,7 +66,7 @@ module.exports = {
     // '@typescript-eslint/explicit-function-return-type': ['error', { allowExpressions: true }],
 
     // Allow properties in ctors, as it reduces code duplicates
-    '@typescript-eslint/no-parameter-properties': ['error', { allows: ['private readonly'] }],
+    '@typescript-eslint/no-parameter-properties': ['error', { allows: ['private readonly', 'protected readonly', 'public readonly'] }],
 
     'eslint-comments/disable-enable-pair': ['error', { allowWholeFile: true }],
   },
