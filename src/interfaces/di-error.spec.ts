@@ -13,7 +13,7 @@ describe('DependencyInjectionError', () => {
   it('`.toString()` displays name and the message for a direct call', () => {
     const error = new DependencyInjectionError('Error reason message');
 
-    assert.equal(error.toString(), 'DependencyInjectionError: Error reason message');
+    assert.strictEqual(error.toString(), 'DependencyInjectionError: Error reason message');
   });
 
   // eslint-disable-next-line prefer-arrow-callback
@@ -24,12 +24,6 @@ describe('DependencyInjectionError', () => {
     const stackTraceLines = stackTrace.split('\n');
     assert.ok(stackTrace.startsWith('DependencyInjectionError: Error reason message'));
     assert.ok(stackTraceLines.length > 5);
-    assert.equal(stackTraceLines[1].indexOf('stackTraceTestCase'), 15);
-  });
-
-  it('Does not have enumerable properties - otherwise they will be displayed in `console.log(err)`', () => {
-    const error = new DependencyInjectionError('Error reason message');
-
-    assert.equal(Object.keys(error).length, 0);
+    assert.strictEqual(stackTraceLines[1].indexOf('stackTraceTestCase'), 15);
   });
 });
