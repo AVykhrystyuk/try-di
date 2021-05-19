@@ -14,6 +14,7 @@ import {
   ResolveProvider,
   ValueProvider,
 } from '../interfaces';
+import { memoize } from './utils';
 
 export class ContainerImpl extends Container {
   public useClass<T, TCtor extends Constructor1<T, TCtorArg1>, TCtorArg1>(
@@ -33,6 +34,9 @@ export class ContainerImpl extends Container {
   }
 
   public useFactory<T, TResult extends T>(provider: ResolveProvider<T, TResult>): Container {
+    const factory: ResolveFactoryFunction<T> = provider.singleton ? memoize(provider.use) : provider.use;
+
+    this.register(provider.for, factory);
     return this;
   }
 
@@ -40,13 +44,11 @@ export class ContainerImpl extends Container {
     return this;
   }
 
-  public readonly resolver: Resolver = this;
-
   public constructor(private readonly factoryRegistry: FactoryRegistry) {
     super();
   }
 
-  public register<T>(token: Token<T>, factory: ResolveFactoryFunction<T>): this {
+  private register<T>(token: Token<T>, factory: ResolveFactoryFunction<T>): this {
     if (this.factoryRegistry.hasFactory(token)) {
       const displayToken = this.getTokenDisplayName(token);
       throw new DependencyInjectionError(`Factory is already registered for '${displayToken}'`);
@@ -64,8 +66,7 @@ export class ContainerImpl extends Container {
     }
 
     try {
-      const obj = factory(this.resolver);
-      return obj as T;
+      return factory(this) as T;
     } catch (err) {
       const innerError = err instanceof Error ? err : undefined;
       const displayToken = this.getTokenDisplayName(token);
