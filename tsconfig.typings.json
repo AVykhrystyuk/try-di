@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist/typings"
+  },
+  "exclude": [
+    "src/demo/**",
+    "src/**/*.spec.ts",
+  ]
+}
