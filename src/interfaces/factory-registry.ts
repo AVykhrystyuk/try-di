@@ -1,10 +1,8 @@
 import { ResolveFactoryFunction } from './resolve-factory-function';
-import { Token as RegistrationToken } from './tokens';
-
-type Token = RegistrationToken<unknown>;
+import { Token } from './tokens';
 
 export type FactoryRegistryTokenCallback = (
-  factory: ResolveFactoryFunction<Token>,
+  factory: ResolveFactoryFunction<unknown>,
   token: Token,
   registry: FactoryRegistry
 ) => void;

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { Fish, Milk, Animal, Cat, Dog, Obj, Bar, Foo, Meat, Tiger } from './types';
+import { Fish, Milk, Animal, Cat, Dog, Obj, Bar, Foo, Meat, Tiger, Empty1, Empty2 } from '../impl/container-types.spec';
 import { Container, Token } from '../interfaces';
 
 declare const container: Container;
@@ -38,4 +38,7 @@ container
   .useFactory({ for: Milk, use: () => new Milk() })
   .useFactory({ for: Animal, use: (r) => new Cat(r.resolve(Fish), r.resolve(Milk)) })
   // @ts-expect-error - Type Obj is not assignable to Foo
-  .useFactory({ for: Foo, use: (r) => new Obj() }); // wrong!
+  .useFactory({ for: Foo, use: (r) => new Obj() }) // wrong!
+
+  // typescript issue - Empty1 and Empty2 are equal types in structural type systems
+  .useFactory({ for: Empty1, use: () => new Empty2() });

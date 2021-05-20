@@ -7,6 +7,14 @@ export interface BaseProvider<T> {
   singleton?: boolean;
 }
 
+export interface ResolveProvider<T, TResult extends T> extends BaseProvider<T> {
+  use: ResolveFactoryFunction<TResult>;
+}
+
+export interface ValueProvider<T, TResult extends T> extends BaseProvider<T> {
+  use: TResult;
+}
+
 export interface ClassProvider1<T, TCtor extends Constructor1<T, TCtorArg1>, TCtorArg1> extends BaseProvider<T> {
   use: TCtor;
   inject?: [Token<TCtorArg1>];
@@ -27,12 +35,4 @@ export interface ClassProvider3<
 > extends BaseProvider<T> {
   use: TCtor;
   inject?: [Token<TCtorArg1>, Token<TCtorArg2>, Token<TCtorArg3>];
-}
-
-export interface ResolveProvider<T, TResult extends T> extends BaseProvider<T> {
-  use: ResolveFactoryFunction<TResult>;
-}
-
-export interface ValueProvider<T, TResult extends T> extends BaseProvider<T> {
-  use: TResult;
 }
