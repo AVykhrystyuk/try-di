@@ -85,6 +85,11 @@ describe('ContainerImpl', () => {
           .useFactory({ for: Dog, use: (r) => new Dog(r.resolve(Meat)) });
 
         assert.throws(
+          () => container.resolve(Meat),
+          (err: DependencyInjectionError) => err.innerError === thrownError,
+          'Error is not being thrown'
+        );
+        assert.throws(
           () => container.resolve(Dog),
           (err: DependencyInjectionError) => (err.innerError as DependencyInjectionError).innerError === thrownError,
           'Error is not being thrown'
