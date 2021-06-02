@@ -4,18 +4,22 @@ import { ResolveFactoryFunction } from './resolve-factory-function';
 
 export interface BaseProvider<T> {
   for: Token<T>;
-  singleton?: boolean;
 }
 
-export interface ResolveProvider<T, TResult extends T> extends BaseProvider<T> {
-  use: ResolveFactoryFunction<TResult>;
+export interface SingletonBaseProvider<T> extends BaseProvider<T> {
+  singleton?: boolean;
 }
 
 export interface ValueProvider<T, TResult extends T> extends BaseProvider<T> {
   use: TResult;
 }
 
-export interface ClassProvider1<T, TCtor extends Constructor1<T, TCtorArg1>, TCtorArg1> extends BaseProvider<T> {
+export interface ResolveProvider<T, TResult extends T> extends SingletonBaseProvider<T> {
+  use: ResolveFactoryFunction<TResult>;
+}
+
+export interface ClassProvider1<T, TCtor extends Constructor1<T, TCtorArg1>, TCtorArg1>
+  extends SingletonBaseProvider<T> {
   use: TCtor;
   inject?: [Token<TCtorArg1>];
 }
