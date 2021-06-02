@@ -14,6 +14,10 @@ describe('ContainerImpl', () => {
       container = new ContainerImpl(createModernFactoryRegistry());
     });
 
+    it('error path - no registration', () => {
+      assert.throws(() => container.resolve(Cat), DependencyInjectionError, 'Error is not being thrown');
+    });
+
     describe('useFactory', () => {
       it('class token', () => {
         container
@@ -69,10 +73,6 @@ describe('ContainerImpl', () => {
         assert.strictEqual(container.resolve(Cat).milk, container.resolve(Milk));
       });
 
-      it('error path - no registration', () => {
-        assert.throws(() => container.resolve(Cat), DependencyInjectionError, 'Error is not being thrown');
-      });
-
       it('error path - error during resolve', () => {
         const thrownError = new Error('Ops!');
         container
@@ -94,6 +94,47 @@ describe('ContainerImpl', () => {
           (err: DependencyInjectionError) => (err.innerError as DependencyInjectionError).innerError === thrownError,
           'Error is not being thrown'
         );
+      });
+    });
+
+    describe('useValue', () => {
+      it('class token', () => {
+        container
+          .useValue({ for: Fish, use: new Fish() })
+          .useValue({ for: Milk, use: new Milk() })
+          .useValue({ for: Cat, use: new Cat(container.resolve(Fish), container.resolve(Milk)) });
+
+        assert.ok(container.resolve(Cat).isCat, "Cat wasn't resolved");
+      });
+
+      it('symbol token', () => {
+        const { fish, milk, cat } = symbolToken;
+
+        container
+          .useValue({ for: fish, use: new Fish() })
+          .useValue({ for: milk, use: new Milk() })
+          .useValue({ for: cat, use: new Cat(container.resolve(fish), container.resolve(milk)) });
+
+        assert.ok(container.resolve(cat).isCat, "Cat wasn't resolved");
+      });
+
+      it('string token', () => {
+        const { fish, milk, cat } = stringToken;
+
+        container
+          .useValue({ for: fish, use: new Fish() })
+          .useValue({ for: milk, use: new Milk() })
+          .useValue({ for: cat, use: new Cat(container.resolve(fish), container.resolve(milk)) });
+
+        assert.ok(container.resolve(cat).isCat, "Cat wasn't resolved");
+      });
+
+      it('acts as a singleton', () => {
+        const fish = new Fish();
+        container.useValue({ for: Fish, use: fish });
+
+        assert.strictEqual(fish, container.resolve(Fish));
+        assert.strictEqual(container.resolve(Fish), container.resolve(Fish));
       });
     });
   });

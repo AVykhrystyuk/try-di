@@ -17,6 +17,18 @@ import {
 import { memoize } from './utils';
 
 export class ContainerImpl extends Container {
+  public useValue<T, TResult extends T>(provider: ValueProvider<T, TResult>): Container {
+    this.register(provider.for, () => provider.use);
+    return this;
+  }
+
+  public useFactory<T, TResult extends T>(provider: ResolveProvider<T, TResult>): Container {
+    const factory: ResolveFactoryFunction<T> = provider.singleton ? memoize(provider.use) : provider.use;
+
+    this.register(provider.for, factory);
+    return this;
+  }
+
   public useClass<T, TCtor extends Constructor1<T, TCtorArg1>, TCtorArg1>(
     provider: ClassProvider1<T, TCtor, TCtorArg1>
   ): Container;
@@ -30,17 +42,6 @@ export class ContainerImpl extends Container {
   ): Container;
 
   public useClass(provider: any): Container {
-    return this;
-  }
-
-  public useFactory<T, TResult extends T>(provider: ResolveProvider<T, TResult>): Container {
-    const factory: ResolveFactoryFunction<T> = provider.singleton ? memoize(provider.use) : provider.use;
-
-    this.register(provider.for, factory);
-    return this;
-  }
-
-  public useValue<T, TResult extends T>(provider: ValueProvider<T, TResult>): Container {
     return this;
   }
 
