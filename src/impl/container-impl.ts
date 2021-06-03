@@ -112,13 +112,12 @@ export class ContainerImpl extends Container {
   }
 
   private register<T>(token: Token<T>, factory: ResolveFactoryFunction<T>, singleton?: boolean): this {
-    const finalFactory = singleton ? memoize(factory) : factory;
-
     if (this.factoryRegistry.hasFactory(token)) {
       const displayToken = this.getTokenDisplayName(token);
       throw new DependencyInjectionError(`Factory is already registered for '${displayToken}'`);
     }
 
+    const finalFactory = singleton ? memoize(factory) : factory;
     this.factoryRegistry.setFactory(token, finalFactory);
     return this;
   }
