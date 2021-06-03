@@ -1,6 +1,24 @@
-import { Constructor1, Constructor2, Constructor3 } from './constructor';
+import {
+  Constructor1,
+  Constructor2,
+  Constructor3,
+  Constructor4,
+  Constructor5,
+  Constructor6,
+  Constructor7,
+} from './constructor';
 import { Resolver } from './resolver';
-import { ClassProvider1, ClassProvider2, ClassProvider3, ResolveProvider, ValueProvider } from './providers';
+import {
+  ClassProvider1,
+  ClassProvider2,
+  ClassProvider3,
+  ClassProvider4,
+  ClassProvider5,
+  ClassProvider6,
+  ClassProvider7,
+  ResolveProvider,
+  ValueProvider,
+} from './providers';
 
 export abstract class Container extends Resolver {
   public abstract useFactory<T, TResult extends T>(provider: ResolveProvider<T, TResult>): Container;
@@ -21,6 +39,50 @@ export abstract class Container extends Resolver {
     TCtorArg2,
     TCtorArg3
   >(provider: ClassProvider3<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3>): Container;
+
+  public abstract useClass<
+    T,
+    TCtor extends Constructor4<T, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4>,
+    TCtorArg1,
+    TCtorArg2,
+    TCtorArg3,
+    TCtorArg4
+  >(provider: ClassProvider4<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4>): Container;
+
+  public abstract useClass<
+    T,
+    TCtor extends Constructor5<T, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5>,
+    TCtorArg1,
+    TCtorArg2,
+    TCtorArg3,
+    TCtorArg4,
+    TCtorArg5
+  >(provider: ClassProvider5<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5>): Container;
+
+  public abstract useClass<
+    T,
+    TCtor extends Constructor6<T, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5, TCtorArg6>,
+    TCtorArg1,
+    TCtorArg2,
+    TCtorArg3,
+    TCtorArg4,
+    TCtorArg5,
+    TCtorArg6
+  >(provider: ClassProvider6<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5, TCtorArg6>): Container;
+
+  public abstract useClass<
+    T,
+    TCtor extends Constructor7<T, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5, TCtorArg6, TCtorArg7>,
+    TCtorArg1,
+    TCtorArg2,
+    TCtorArg3,
+    TCtorArg4,
+    TCtorArg5,
+    TCtorArg6,
+    TCtorArg7
+  >(
+    provider: ClassProvider7<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5, TCtorArg6, TCtorArg7>
+  ): Container;
 
   public abstract tryVerifyAll(): boolean;
 

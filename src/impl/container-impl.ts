@@ -1,18 +1,27 @@
 import {
   Container,
-  Resolver,
   ResolveFactoryFunction,
   FactoryRegistry,
   DependencyInjectionError,
   Token,
+  Constructor,
   Constructor1,
   Constructor2,
   Constructor3,
+  Constructor4,
+  Constructor5,
+  Constructor6,
+  Constructor7,
   ClassProvider1,
   ClassProvider2,
   ClassProvider3,
+  ClassProvider4,
+  ClassProvider5,
+  ClassProvider6,
+  ClassProvider7,
   ResolveProvider,
   ValueProvider,
+  ClassBaseProvider,
 } from '../interfaces';
 import { memoize } from './utils';
 
@@ -23,9 +32,7 @@ export class ContainerImpl extends Container {
   }
 
   public useFactory<T, TResult extends T>(provider: ResolveProvider<T, TResult>): Container {
-    const factory: ResolveFactoryFunction<T> = provider.singleton ? memoize(provider.use) : provider.use;
-
-    this.register(provider.for, factory);
+    this.register(provider.for, provider.use, provider.singleton);
     return this;
   }
 
@@ -41,7 +48,62 @@ export class ContainerImpl extends Container {
     provider: ClassProvider3<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3>
   ): Container;
 
-  public useClass(provider: any): Container {
+  public useClass<
+    T,
+    TCtor extends Constructor4<T, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4>,
+    TCtorArg1,
+    TCtorArg2,
+    TCtorArg3,
+    TCtorArg4
+  >(provider: ClassProvider4<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4>): Container;
+
+  public useClass<
+    T,
+    TCtor extends Constructor5<T, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5>,
+    TCtorArg1,
+    TCtorArg2,
+    TCtorArg3,
+    TCtorArg4,
+    TCtorArg5
+  >(provider: ClassProvider5<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5>): Container;
+
+  public useClass<
+    T,
+    TCtor extends Constructor6<T, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5, TCtorArg6>,
+    TCtorArg1,
+    TCtorArg2,
+    TCtorArg3,
+    TCtorArg4,
+    TCtorArg5,
+    TCtorArg6
+  >(provider: ClassProvider6<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5, TCtorArg6>): Container;
+
+  public useClass<
+    T,
+    TCtor extends Constructor7<T, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5, TCtorArg6, TCtorArg7>,
+    TCtorArg1,
+    TCtorArg2,
+    TCtorArg3,
+    TCtorArg4,
+    TCtorArg5,
+    TCtorArg6,
+    TCtorArg7
+  >(
+    provider: ClassProvider7<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5, TCtorArg6, TCtorArg7>
+  ): Container;
+
+  public useClass(provider: ClassBaseProvider<unknown, Constructor<unknown>>): Container {
+    this.register(
+      provider.for,
+      () => {
+        const Ctor = provider.use;
+        const depTokens = provider.inject ?? [];
+        const deps = depTokens.map((token) => this.resolve(token));
+        return new Ctor(...deps);
+      },
+      provider.singleton
+    );
+
     return this;
   }
 
@@ -49,13 +111,14 @@ export class ContainerImpl extends Container {
     super();
   }
 
-  private register<T>(token: Token<T>, factory: ResolveFactoryFunction<T>): this {
+  private register<T>(token: Token<T>, factory: ResolveFactoryFunction<T>, singleton?: boolean): this {
     if (this.factoryRegistry.hasFactory(token)) {
       const displayToken = this.getTokenDisplayName(token);
       throw new DependencyInjectionError(`Factory is already registered for '${displayToken}'`);
     }
 
-    this.factoryRegistry.setFactory(token, factory);
+    const finalFactory = singleton ? memoize(factory) : factory;
+    this.factoryRegistry.setFactory(token, finalFactory);
     return this;
   }
 
