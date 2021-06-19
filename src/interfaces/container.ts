@@ -19,6 +19,7 @@ import {
   ResolveProvider,
   ValueProvider,
 } from './providers';
+import { DependencyInjectionError } from './di-error';
 
 export abstract class Container extends Resolver {
   public abstract useFactory<T, TResult extends T>(provider: ResolveProvider<T, TResult>): Container;
@@ -84,7 +85,7 @@ export abstract class Container extends Resolver {
     provider: ClassProvider7<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5, TCtorArg6, TCtorArg7>
   ): Container;
 
-  public abstract tryVerifyAll(): boolean;
+  public abstract tryVerifyAll(): DependencyInjectionError | undefined;
 
   /**
    * Verifies that all registered tokens can be resolved
