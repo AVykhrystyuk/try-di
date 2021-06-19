@@ -5,20 +5,6 @@ import {
   DependencyInjectionError,
   Token,
   Constructor,
-  Constructor1,
-  Constructor2,
-  Constructor3,
-  Constructor4,
-  Constructor5,
-  Constructor6,
-  Constructor7,
-  ClassProvider1,
-  ClassProvider2,
-  ClassProvider3,
-  ClassProvider4,
-  ClassProvider5,
-  ClassProvider6,
-  ClassProvider7,
   ResolveProvider,
   ValueProvider,
   ClassBaseProvider,
@@ -27,84 +13,24 @@ import { memoize } from './utils';
 
 export class ContainerImpl extends Container {
   public useValue<T, TResult extends T>(provider: ValueProvider<T, TResult>): Container {
-    this.register(provider.for, () => provider.use);
-    return this;
+    return this.register(provider.for, () => provider.use);
   }
 
   public useFactory<T, TResult extends T>(provider: ResolveProvider<T, TResult>): Container {
-    this.register(provider.for, provider.use, provider.singleton);
-    return this;
+    return this.register(provider.for, provider.use, provider.singleton);
   }
 
-  public useClass<T, TCtor extends Constructor1<T, TCtorArg1>, TCtorArg1>(
-    provider: ClassProvider1<T, TCtor, TCtorArg1>
-  ): Container;
-
-  public useClass<T, TCtor extends Constructor2<T, TCtorArg1, TCtorArg2>, TCtorArg1, TCtorArg2>(
-    provider: ClassProvider2<T, TCtor, TCtorArg1, TCtorArg2>
-  ): Container;
-
-  public useClass<T, TCtor extends Constructor3<T, TCtorArg1, TCtorArg2, TCtorArg3>, TCtorArg1, TCtorArg2, TCtorArg3>(
-    provider: ClassProvider3<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3>
-  ): Container;
-
-  public useClass<
-    T,
-    TCtor extends Constructor4<T, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4>,
-    TCtorArg1,
-    TCtorArg2,
-    TCtorArg3,
-    TCtorArg4
-  >(provider: ClassProvider4<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4>): Container;
-
-  public useClass<
-    T,
-    TCtor extends Constructor5<T, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5>,
-    TCtorArg1,
-    TCtorArg2,
-    TCtorArg3,
-    TCtorArg4,
-    TCtorArg5
-  >(provider: ClassProvider5<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5>): Container;
-
-  public useClass<
-    T,
-    TCtor extends Constructor6<T, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5, TCtorArg6>,
-    TCtorArg1,
-    TCtorArg2,
-    TCtorArg3,
-    TCtorArg4,
-    TCtorArg5,
-    TCtorArg6
-  >(provider: ClassProvider6<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5, TCtorArg6>): Container;
-
-  public useClass<
-    T,
-    TCtor extends Constructor7<T, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5, TCtorArg6, TCtorArg7>,
-    TCtorArg1,
-    TCtorArg2,
-    TCtorArg3,
-    TCtorArg4,
-    TCtorArg5,
-    TCtorArg6,
-    TCtorArg7
-  >(
-    provider: ClassProvider7<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5, TCtorArg6, TCtorArg7>
-  ): Container;
-
   public useClass(provider: ClassBaseProvider<unknown, Constructor<unknown>>): Container {
-    this.register(
+    return this.register(
       provider.for,
       () => {
         const Ctor = provider.use;
         const depTokens = provider.inject ?? [];
-        const deps = depTokens.map((token) => this.resolve(token));
+        const deps = depTokens.map(this.resolve, this);
         return new Ctor(...deps);
       },
       provider.singleton
     );
-
-    return this;
   }
 
   public constructor(private readonly factoryRegistry: FactoryRegistry) {
@@ -138,13 +64,21 @@ export class ContainerImpl extends Container {
     }
   }
 
-  public tryVerifyAll(): boolean {
-    return true;
+  public tryVerifyAll(): DependencyInjectionError | undefined {
+    try {
+      this.verifyAll();
+      return undefined;
+    } catch (err) {
+      if (err instanceof DependencyInjectionError) {
+        return err;
+      }
+      throw err;
+    }
   }
 
   public verifyAll(): void {
     this.factoryRegistry.forEach((factory, token) => {
-      console.log(token, factory);
+      this.resolve(token);
     });
   }
 

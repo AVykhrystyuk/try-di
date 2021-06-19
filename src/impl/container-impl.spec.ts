@@ -220,5 +220,73 @@ describe('ContainerImpl', () => {
         assert.strictEqual(container.resolve(Fish), container.resolve(Fish));
       });
     });
+
+    describe('use mixed registrations', () => {
+      it('use factory, value and class all together', () => {
+        const { milk } = symbolToken;
+        const { cat } = stringToken;
+
+        container
+          .useFactory({ for: Fish, use: () => new Fish() })
+          .useValue({ for: milk, use: new Milk() })
+          .useClass({ for: cat, use: Cat, inject: [Fish, milk] });
+
+        assert.ok(container.resolve(cat).isCat, "Cat wasn't resolved");
+      });
+    });
+
+    describe('tryVerifyAll', () => {
+      it('returns false if an error was thrown during a dependency resolve', () => {
+        const errorToThrow = new Error('Ops!');
+        registerUnresolvableCat(container, errorToThrow);
+
+        const thrownError = container.tryVerifyAll();
+        assert.strictEqual(thrownError?.innerError, errorToThrow, 'Invalid dependencies are verified');
+      });
+
+      it('returns true when every dependency is resolved', () => {
+        registerResolvableCat(container);
+
+        assert.strictEqual(container.tryVerifyAll(), undefined, 'Valid dependencies are not verified');
+      });
+    });
+
+    describe('verifyAll', () => {
+      it('throws when error is thrown during a dependency resolve', () => {
+        const errorToThrow = new Error('Ops!');
+        registerUnresolvableCat(container, errorToThrow);
+
+        assert.throws(
+          () => container.verifyAll(),
+          (err: DependencyInjectionError) => err.innerError === errorToThrow,
+          'Error is not being thrown'
+        );
+      });
+
+      it('no error when every dependency is resolved', () => {
+        registerResolvableCat(container);
+
+        container.verifyAll();
+      });
+    });
   });
 });
+
+function registerResolvableCat(container: Container) {
+  container
+    .useFactory({ for: Fish, use: () => new Fish() })
+    .useValue({ for: Milk, use: new Milk() })
+    .useClass({ for: Cat, use: Cat, inject: [Fish, Milk] });
+}
+
+function registerUnresolvableCat(container: Container, errorToThrow = new Error('Ops!')) {
+  container
+    .useFactory({
+      for: Fish,
+      use: () => {
+        throw errorToThrow;
+      },
+    })
+    .useValue({ for: Milk, use: new Milk() })
+    .useClass({ for: Cat, use: Cat, inject: [Fish, Milk] });
+}
