@@ -67,7 +67,7 @@ function buildOutput() {
 
       /* esm */
       {
-        file: `${ES5_BUNDLE_PATH}/index.esm${suffix}.js`,
+        file: `${ES5_BUNDLE_PATH}/index${suffix}.js`,
         format: 'es',
         sourcemap: true,
         plugins: [terser()],
