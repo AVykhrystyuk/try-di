@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, it } from 'mocha';
 import * as assert from 'assert';
 
