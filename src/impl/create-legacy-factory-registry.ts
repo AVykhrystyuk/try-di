@@ -1,23 +1,28 @@
-import { FactoryRegistry } from '../interfaces';
+import { FactoryRegistry, ResolveFactoryFunction, Token } from '../interfaces';
 
 export function createLegacyFactoryRegistry(): FactoryRegistry {
-  const factoryByToken = Object.create(null);
+  // cannot use `string | symbol` type here, see https://github.com/Microsoft/TypeScript/issues/24587
+  const factoryByToken: Record<string, ResolveFactoryFunction<unknown>> = Object.create(null);
+  // cannot iterate through symbols as keys in ES5
+  const keys: Token<unknown>[] = [];
+
+  const toKey = (token: Token<unknown>) => token as unknown as string;
 
   return {
-    getTokens: () => {
-      throw Error('not impl');
-    },
-    hasFactory: (token) => {
-      throw Error('not impl');
-    },
-    getFactory: (token) => {
-      throw Error('not impl');
-    },
+    getTokens: () => keys,
+    hasFactory: (token) => Object.prototype.hasOwnProperty.call(factoryByToken, toKey(token)),
+    getFactory: (token) => factoryByToken[toKey(token)],
     setFactory(token, factory) {
-      throw Error('not impl');
+      if (!this.hasFactory(token)) {
+        keys.push(token);
+      }
+      factoryByToken[toKey(token)] = factory;
     },
     forEach(callback) {
-      throw Error('not impl');
+      keys.forEach((token) => {
+        const factory = this.getFactory(token)!;
+        callback(factory, token, this);
+      });
     },
   };
 }

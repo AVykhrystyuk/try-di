@@ -4,15 +4,19 @@ import * as assert from 'assert';
 import { Container, DependencyInjectionError } from '../interfaces';
 import { ContainerImpl } from './container-impl';
 import { createModernFactoryRegistry } from './create-modern-factory-registry';
+import { createLegacyFactoryRegistry } from './create-legacy-factory-registry';
 import { Cat, Dog, Fish, Meat, Milk, stringToken, symbolToken } from './container-types.spec';
 
-describe('ContainerImpl', () => {
-  // TODO: use legacyFactoryRegistry
-  describe('with ModernFactoryRegistry', () => {
+const testBlocks = [
+  { title: 'ContainerImpl with ModernFactoryRegistry', makeRegistry: createModernFactoryRegistry },
+  { title: 'ContainerImpl with LegacyFactoryRegistry', makeRegistry: createLegacyFactoryRegistry },
+];
+testBlocks.forEach(({ title, makeRegistry }) => {
+  describe(title, () => {
     let container: Container;
 
     beforeEach(() => {
-      container = new ContainerImpl(createModernFactoryRegistry());
+      container = new ContainerImpl(makeRegistry());
     });
 
     it('error path - no registration', () => {

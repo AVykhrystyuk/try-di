@@ -68,6 +68,9 @@ module.exports = {
     // Allow properties in ctors, as it reduces code duplicates
     '@typescript-eslint/no-parameter-properties': ['error', { allows: ['private readonly', 'protected readonly', 'public readonly'] }],
 
+    // You know what you're doing when you force-unwrap (dammit operator) an optional field
+    '@typescript-eslint/no-non-null-assertion': 'off',
+
     'eslint-comments/disable-enable-pair': ['error', { allowWholeFile: true }],
   },
   overrides: [
