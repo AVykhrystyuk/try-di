@@ -28,3 +28,5 @@ assert.ok(container.resolve(Cat).isCat, "Cat wasn't resolved");
 Supports modern browsers, IE and Node.js. Provides modern ES2019 and CommonJS bundles, as well as legacy ones (ES5).
 
 [size limit]: https://github.com/ai/size-limit
+
+`TODO: more samples - how to verifyAll() and all possible ways to register deps`
