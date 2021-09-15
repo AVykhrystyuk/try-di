@@ -53,24 +53,35 @@ export default {
 };
 
 function buildOutput() {
+  const sourcemap = true;
+
   if (ES5) {
     const suffix = PRODUCTION ? '.min' : '';
+    const plugins = PRODUCTION ? [terser()] : [];
     return [
       /* iife */
       {
         file: `${ES5_BUNDLE_PATH}/index.iife${suffix}.js`,
         format: 'iife',
         name: 'TRY_DI',
-        sourcemap: true,
-        plugins: [terser()],
+        sourcemap,
+        plugins,
       },
 
       /* esm */
       {
         file: `${ES5_BUNDLE_PATH}/index${suffix}.js`,
         format: 'es',
-        sourcemap: true,
-        plugins: [terser()],
+        sourcemap,
+        plugins,
+      },
+
+      /* cjs */
+      {
+        file: `${ES5_BUNDLE_PATH}/index.cjs${suffix}.js`,
+        format: 'cjs',
+        sourcemap,
+        plugins,
       },
     ];
   }
@@ -81,7 +92,7 @@ function buildOutput() {
       {
         file: pkg.module,
         format: 'es',
-        sourcemap: true,
+        sourcemap,
       },
     ];
   }
@@ -91,7 +102,7 @@ function buildOutput() {
     {
       file: pkg.main,
       format: 'cjs',
-      sourcemap: true,
+      sourcemap,
     },
   ];
 }

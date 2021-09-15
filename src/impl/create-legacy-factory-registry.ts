@@ -6,17 +6,17 @@ export function createLegacyFactoryRegistry(): FactoryRegistry {
   // cannot iterate through symbols as keys in ES5
   const keys: Token<unknown>[] = [];
 
-  const toKey = (token: Token<unknown>) => token as unknown as string;
+  const asKey = (token: Token<unknown>) => token as unknown as string;
 
   return {
     getTokens: () => keys,
-    hasFactory: (token) => Object.prototype.hasOwnProperty.call(factoryByToken, toKey(token)),
-    getFactory: (token) => factoryByToken[toKey(token)],
+    hasFactory: (token) => Object.prototype.hasOwnProperty.call(factoryByToken, asKey(token)),
+    getFactory: (token) => factoryByToken[asKey(token)],
     setFactory(token, factory) {
       if (!this.hasFactory(token)) {
         keys.push(token);
       }
-      factoryByToken[toKey(token)] = factory;
+      factoryByToken[asKey(token)] = factory;
     },
     forEach(callback) {
       keys.forEach((token) => {

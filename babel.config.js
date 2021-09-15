@@ -27,13 +27,15 @@ function buildConfig(options) {
 }
 
 function buildPresetEnv({ buildType, isProduction, isTest }) {
+  const preserveESmodules = false; /* 'false' to preserve ES modules */
+
   switch (buildType) {
     /* lts nodejs */
     case 'cjs':
       return ['@babel/preset-env', {
         debug: !isProduction,
         loose: true,
-        modules: isTest ? 'commonjs' : false,
+        modules: isTest ? 'commonjs' : preserveESmodules,
         targets: {
           node: 'current', // the same as process.versions.node
         },
@@ -44,7 +46,7 @@ function buildPresetEnv({ buildType, isProduction, isTest }) {
       return ['@babel/preset-env', {
         debug: !isProduction,
         loose: true,
-        modules: false,
+        modules: preserveESmodules,
       }];
 
     default:
