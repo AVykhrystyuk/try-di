@@ -25,7 +25,7 @@ export class ContainerImpl extends Container {
       provider.for,
       () => {
         const Ctor = provider.use;
-        const depTokens = provider.inject ?? [];
+        const depTokens = provider.inject || [];
         const deps = depTokens.map(this.resolve, this);
         return new Ctor(...deps);
       },
