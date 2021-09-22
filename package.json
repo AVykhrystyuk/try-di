@@ -85,6 +85,9 @@
     "standard-version": "^9.3.1",
     "typescript": "^4.3.4"
   },
+  "standard-version": {
+    "header": "# Changelog\n\nAll notable changes to this project will be documented in this file.\n"
+  },
   "size-limit": [
     {
       "path": "dist/index.cjs.js",
