@@ -11,6 +11,17 @@ import {
 } from '../interfaces';
 import { memoize } from './utils';
 
+const nameof = <T>(name: Extract<keyof T, string>): string => name;
+
+const functionsToBind = [
+  nameof<Container>('useValue'),
+  nameof<Container>('useFactory'),
+  nameof<Container>('useClass'),
+  nameof<Container>('resolve'),
+  nameof<Container>('tryVerifyAll'),
+  nameof<Container>('verifyAll'),
+];
+
 export class ContainerImpl extends Container {
   public useValue<T, TResult extends T>(provider: ValueProvider<T, TResult>): Container {
     return this.register(provider.for, () => provider.use);
@@ -35,6 +46,12 @@ export class ContainerImpl extends Container {
 
   public constructor(private readonly factoryRegistry: FactoryRegistry) {
     super();
+
+    functionsToBind.forEach((func) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const anyThis = this as any;
+      anyThis[func] = anyThis[func].bind(this);
+    });
   }
 
   private register<T>(token: Token<T>, factory: ResolveFactoryFunction<T>, singleton?: boolean): this {
