@@ -7,12 +7,14 @@ export const stringToken = {
   fish: 'fish' as Token<Fish>,
   milk: 'milk' as Token<Milk>,
   cat: 'cat' as Token<Cat>,
+  water: 'water' as Token<Water>,
 };
 
 export const symbolToken = {
   fish: Symbol('fish') as Token<Fish>,
   milk: Symbol('milk') as Token<Milk>,
   cat: Symbol('cat') as Token<Cat>,
+  water: Symbol('water') as Token<Water>,
 };
 
 export class Obj {
@@ -21,6 +23,14 @@ export class Obj {
 
 export class Fish extends Obj {
   isFish = true;
+
+  constructor(readonly water: Water) {
+    super();
+  }
+}
+
+export class Water extends Obj {
+  isWater = true;
 }
 
 export class Milk extends Obj {
@@ -36,7 +46,7 @@ export class Animal extends Obj {
 }
 
 export class Cat extends Animal {
-  constructor(readonly fish: Fish, readonly milk: Milk) {
+  constructor(readonly fish: Fish, readonly water: Water) {
     super();
   }
 
@@ -44,8 +54,8 @@ export class Cat extends Animal {
 }
 
 export class Tiger extends Cat {
-  constructor(fish: Fish, milk: Milk, readonly meat: Meat) {
-    super(fish, milk);
+  constructor(fish: Fish, water: Water, readonly meat: Meat) {
+    super(fish, water);
   }
 
   isTiger = true;
