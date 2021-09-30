@@ -22,18 +22,18 @@ import {
 import { DependencyInjectionError } from './di-error';
 
 export abstract class Container extends Resolver {
-  public abstract useFactory<T, TResult extends T>(provider: ResolveProvider<T, TResult>): Container;
-  public abstract useValue<T, TResult extends T>(provider: ValueProvider<T, TResult>): Container;
+  public abstract setFactory<T, TResult extends T>(provider: ResolveProvider<T, TResult>): Container;
+  public abstract setValue<T, TResult extends T>(provider: ValueProvider<T, TResult>): Container;
 
-  public abstract useClass<T, TCtor extends Constructor1<T, TCtorArg1>, TCtorArg1>(
+  public abstract setClass<T, TCtor extends Constructor1<T, TCtorArg1>, TCtorArg1>(
     provider: ClassProvider1<T, TCtor, TCtorArg1>
   ): Container;
 
-  public abstract useClass<T, TCtor extends Constructor2<T, TCtorArg1, TCtorArg2>, TCtorArg1, TCtorArg2>(
+  public abstract setClass<T, TCtor extends Constructor2<T, TCtorArg1, TCtorArg2>, TCtorArg1, TCtorArg2>(
     provider: ClassProvider2<T, TCtor, TCtorArg1, TCtorArg2>
   ): Container;
 
-  public abstract useClass<
+  public abstract setClass<
     T,
     TCtor extends Constructor3<T, TCtorArg1, TCtorArg2, TCtorArg3>,
     TCtorArg1,
@@ -41,7 +41,7 @@ export abstract class Container extends Resolver {
     TCtorArg3
   >(provider: ClassProvider3<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3>): Container;
 
-  public abstract useClass<
+  public abstract setClass<
     T,
     TCtor extends Constructor4<T, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4>,
     TCtorArg1,
@@ -50,7 +50,7 @@ export abstract class Container extends Resolver {
     TCtorArg4
   >(provider: ClassProvider4<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4>): Container;
 
-  public abstract useClass<
+  public abstract setClass<
     T,
     TCtor extends Constructor5<T, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5>,
     TCtorArg1,
@@ -60,7 +60,7 @@ export abstract class Container extends Resolver {
     TCtorArg5
   >(provider: ClassProvider5<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5>): Container;
 
-  public abstract useClass<
+  public abstract setClass<
     T,
     TCtor extends Constructor6<T, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5, TCtorArg6>,
     TCtorArg1,
@@ -71,7 +71,7 @@ export abstract class Container extends Resolver {
     TCtorArg6
   >(provider: ClassProvider6<T, TCtor, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5, TCtorArg6>): Container;
 
-  public abstract useClass<
+  public abstract setClass<
     T,
     TCtor extends Constructor7<T, TCtorArg1, TCtorArg2, TCtorArg3, TCtorArg4, TCtorArg5, TCtorArg6, TCtorArg7>,
     TCtorArg1,

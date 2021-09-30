@@ -14,11 +14,11 @@ Try DI is a simple, typesafe and lightweight dependency injection container for 
 ```js
 import { createContainer } from 'try-di';
 
-const { useValue, useFactory, useClass, resolve } = createContainer();
+const { setValue, setFactory, setClass, resolve } = createContainer();
 
-useValue({ for: Water, use: new Water() });
-useFactory({ for: Fish, use: () => new Fish(resolve(Water)) });
-useClass({ for: Animal, use: Cat, inject: [Fish, Water] });
+setValue({ for: Water, use: new Water() });
+setFactory({ for: Fish, use: () => new Fish(resolve(Water)) });
+setClass({ for: Animal, use: Cat, inject: [Fish, Water] });
 
 assert.ok(resolve(Animal), "Cat wasn't resolved");
 ```

@@ -23,12 +23,12 @@ testBlocks.forEach(({ title, makeRegistry }) => {
       assert.throws(() => container.resolve(Cat), DependencyInjectionError, 'Error is not being thrown');
     });
 
-    describe('useClass', () => {
+    describe('setClass', () => {
       it('class token', () => {
         container
-          .useClass({ for: Water, use: Water })
-          .useClass({ for: Fish, use: Fish, inject: [Water] })
-          .useClass({ for: Cat, use: Cat, inject: [Fish, Water] });
+          .setClass({ for: Water, use: Water })
+          .setClass({ for: Fish, use: Fish, inject: [Water] })
+          .setClass({ for: Cat, use: Cat, inject: [Fish, Water] });
 
         assert.ok(container.resolve(Cat).isCat, "Cat wasn't resolved");
       });
@@ -37,9 +37,9 @@ testBlocks.forEach(({ title, makeRegistry }) => {
         const { fish, cat, water } = symbolToken;
 
         container
-          .useClass({ for: water, use: Water })
-          .useClass({ for: fish, use: Fish, inject: [water] })
-          .useClass({ for: cat, use: Cat, inject: [fish, water] });
+          .setClass({ for: water, use: Water })
+          .setClass({ for: fish, use: Fish, inject: [water] })
+          .setClass({ for: cat, use: Cat, inject: [fish, water] });
 
         assert.ok(container.resolve(cat).isCat, "Cat wasn't resolved");
       });
@@ -48,18 +48,18 @@ testBlocks.forEach(({ title, makeRegistry }) => {
         const { fish, cat, water } = stringToken;
 
         container
-          .useClass({ for: water, use: Water })
-          .useClass({ for: fish, use: Fish, inject: [water] })
-          .useClass({ for: cat, use: Cat, inject: [fish, water] });
+          .setClass({ for: water, use: Water })
+          .setClass({ for: fish, use: Fish, inject: [water] })
+          .setClass({ for: cat, use: Cat, inject: [fish, water] });
 
         assert.ok(container.resolve(cat).isCat, "Cat wasn't resolved");
       });
 
       it('regular - not a singleton', () => {
         container
-          .useClass({ for: Water, use: Water })
-          .useClass({ for: Fish, use: Fish, inject: [Water] })
-          .useClass({ for: Cat, use: Cat, inject: [Fish, Water] });
+          .setClass({ for: Water, use: Water })
+          .setClass({ for: Fish, use: Fish, inject: [Water] })
+          .setClass({ for: Cat, use: Cat, inject: [Fish, Water] });
 
         assert.notStrictEqual(container.resolve(Fish), container.resolve(Fish));
         assert.notStrictEqual(container.resolve(Water), container.resolve(Water));
@@ -68,9 +68,9 @@ testBlocks.forEach(({ title, makeRegistry }) => {
 
       it('singleton', () => {
         container
-          .useClass({ for: Water, use: Water })
-          .useClass({ for: Fish, use: Fish, inject: [Water], singleton: true })
-          .useClass({ for: Cat, use: Cat, inject: [Fish, Water], singleton: true });
+          .setClass({ for: Water, use: Water })
+          .setClass({ for: Fish, use: Fish, inject: [Water], singleton: true })
+          .setClass({ for: Cat, use: Cat, inject: [Fish, Water], singleton: true });
 
         assert.notStrictEqual(container.resolve(Water), container.resolve(Water));
         assert.strictEqual(container.resolve(Fish), container.resolve(Fish));
@@ -81,7 +81,7 @@ testBlocks.forEach(({ title, makeRegistry }) => {
       it('error path - error during resolve', () => {
         const thrownError = new Error('Ops!');
         container
-          .useClass({
+          .setClass({
             for: Meat,
             use: class ThrowableMeat extends Meat {
               constructor() {
@@ -90,7 +90,7 @@ testBlocks.forEach(({ title, makeRegistry }) => {
               }
             },
           })
-          .useClass({ for: Dog, use: Dog, inject: [Meat] });
+          .setClass({ for: Dog, use: Dog, inject: [Meat] });
 
         assert.throws(
           () => container.resolve(Meat),
@@ -105,12 +105,12 @@ testBlocks.forEach(({ title, makeRegistry }) => {
       });
     });
 
-    describe('useFactory', () => {
+    describe('setFactory', () => {
       it('class token', () => {
         container
-          .useFactory({ for: Water, use: () => new Water() })
-          .useFactory({ for: Fish, use: (r) => new Fish(r.resolve(Water)) })
-          .useFactory({ for: Cat, use: (r) => new Cat(r.resolve(Fish), r.resolve(Water)) });
+          .setFactory({ for: Water, use: () => new Water() })
+          .setFactory({ for: Fish, use: (r) => new Fish(r.resolve(Water)) })
+          .setFactory({ for: Cat, use: (r) => new Cat(r.resolve(Fish), r.resolve(Water)) });
 
         assert.ok(container.resolve(Cat).isCat, "Cat wasn't resolved");
       });
@@ -119,9 +119,9 @@ testBlocks.forEach(({ title, makeRegistry }) => {
         const { fish, cat, water } = symbolToken;
 
         container
-          .useFactory({ for: water, use: () => new Water() })
-          .useFactory({ for: fish, use: (r) => new Fish(r.resolve(water)) })
-          .useFactory({ for: cat, use: (r) => new Cat(r.resolve(fish), r.resolve(water)) });
+          .setFactory({ for: water, use: () => new Water() })
+          .setFactory({ for: fish, use: (r) => new Fish(r.resolve(water)) })
+          .setFactory({ for: cat, use: (r) => new Cat(r.resolve(fish), r.resolve(water)) });
 
         assert.ok(container.resolve(cat).isCat, "Cat wasn't resolved");
       });
@@ -130,18 +130,18 @@ testBlocks.forEach(({ title, makeRegistry }) => {
         const { fish, cat, water } = stringToken;
 
         container
-          .useFactory({ for: water, use: () => new Water() })
-          .useFactory({ for: fish, use: (r) => new Fish(r.resolve(water)) })
-          .useFactory({ for: cat, use: (r) => new Cat(r.resolve(fish), r.resolve(water)) });
+          .setFactory({ for: water, use: () => new Water() })
+          .setFactory({ for: fish, use: (r) => new Fish(r.resolve(water)) })
+          .setFactory({ for: cat, use: (r) => new Cat(r.resolve(fish), r.resolve(water)) });
 
         assert.ok(container.resolve(cat).isCat, "Cat wasn't resolved");
       });
 
       it('regular - not a singleton', () => {
         container
-          .useFactory({ for: Water, use: () => new Water() })
-          .useFactory({ for: Fish, use: (r) => new Fish(r.resolve(Water)) })
-          .useFactory({ for: Cat, use: (r) => new Cat(r.resolve(Fish), r.resolve(Water)) });
+          .setFactory({ for: Water, use: () => new Water() })
+          .setFactory({ for: Fish, use: (r) => new Fish(r.resolve(Water)) })
+          .setFactory({ for: Cat, use: (r) => new Cat(r.resolve(Fish), r.resolve(Water)) });
 
         assert.notStrictEqual(container.resolve(Fish), container.resolve(Fish));
         assert.notStrictEqual(container.resolve(Water), container.resolve(Water));
@@ -150,9 +150,9 @@ testBlocks.forEach(({ title, makeRegistry }) => {
 
       it('singleton', () => {
         container
-          .useFactory({ for: Water, use: () => new Water() })
-          .useFactory({ for: Fish, use: (r) => new Fish(r.resolve(Water)), singleton: true })
-          .useFactory({ for: Cat, use: (r) => new Cat(r.resolve(Fish), r.resolve(Water)), singleton: true });
+          .setFactory({ for: Water, use: () => new Water() })
+          .setFactory({ for: Fish, use: (r) => new Fish(r.resolve(Water)), singleton: true })
+          .setFactory({ for: Cat, use: (r) => new Cat(r.resolve(Fish), r.resolve(Water)), singleton: true });
 
         assert.notStrictEqual(container.resolve(Water), container.resolve(Water));
         assert.strictEqual(container.resolve(Fish), container.resolve(Fish));
@@ -163,13 +163,13 @@ testBlocks.forEach(({ title, makeRegistry }) => {
       it('error path - error during resolve', () => {
         const thrownError = new Error('Ops!');
         container
-          .useFactory({
+          .setFactory({
             for: Meat,
             use: () => {
               throw thrownError;
             },
           })
-          .useFactory({ for: Dog, use: (r) => new Dog(r.resolve(Meat)) });
+          .setFactory({ for: Dog, use: (r) => new Dog(r.resolve(Meat)) });
 
         assert.throws(
           () => container.resolve(Meat),
@@ -184,10 +184,10 @@ testBlocks.forEach(({ title, makeRegistry }) => {
       });
     });
 
-    describe('useValue', () => {
+    describe('setValue', () => {
       it('acts as a singleton', () => {
         const water = new Water();
-        container.useValue({ for: Water, use: water });
+        container.setValue({ for: Water, use: water });
 
         assert.strictEqual(water, container.resolve(Water));
         assert.strictEqual(container.resolve(Water), container.resolve(Water));
@@ -195,9 +195,9 @@ testBlocks.forEach(({ title, makeRegistry }) => {
 
       it('class token', () => {
         container
-          .useValue({ for: Water, use: new Water() })
-          .useValue({ for: Fish, use: new Fish(container.resolve(Water)) })
-          .useValue({ for: Cat, use: new Cat(container.resolve(Fish), container.resolve(Water)) });
+          .setValue({ for: Water, use: new Water() })
+          .setValue({ for: Fish, use: new Fish(container.resolve(Water)) })
+          .setValue({ for: Cat, use: new Cat(container.resolve(Fish), container.resolve(Water)) });
 
         assert.ok(container.resolve(Cat).isCat, "Cat wasn't resolved");
       });
@@ -206,9 +206,9 @@ testBlocks.forEach(({ title, makeRegistry }) => {
         const { fish, water, cat } = symbolToken;
 
         container
-          .useValue({ for: water, use: new Water() })
-          .useValue({ for: fish, use: new Fish(container.resolve(water)) })
-          .useValue({ for: cat, use: new Cat(container.resolve(fish), container.resolve(water)) });
+          .setValue({ for: water, use: new Water() })
+          .setValue({ for: fish, use: new Fish(container.resolve(water)) })
+          .setValue({ for: cat, use: new Cat(container.resolve(fish), container.resolve(water)) });
 
         assert.ok(container.resolve(cat).isCat, "Cat wasn't resolved");
       });
@@ -217,9 +217,9 @@ testBlocks.forEach(({ title, makeRegistry }) => {
         const { fish, water, cat } = stringToken;
 
         container
-          .useValue({ for: water, use: new Water() })
-          .useValue({ for: fish, use: new Fish(container.resolve(water)) })
-          .useValue({ for: cat, use: new Cat(container.resolve(fish), container.resolve(water)) });
+          .setValue({ for: water, use: new Water() })
+          .setValue({ for: fish, use: new Fish(container.resolve(water)) })
+          .setValue({ for: cat, use: new Cat(container.resolve(fish), container.resolve(water)) });
 
         assert.ok(container.resolve(cat).isCat, "Cat wasn't resolved");
       });
@@ -231,9 +231,9 @@ testBlocks.forEach(({ title, makeRegistry }) => {
         const { cat } = stringToken;
 
         container
-          .useFactory({ for: Fish, use: () => new Fish(container.resolve(water)) })
-          .useValue({ for: water, use: new Water() })
-          .useClass({ for: cat, use: Cat, inject: [Fish, water] });
+          .setFactory({ for: Fish, use: () => new Fish(container.resolve(water)) })
+          .setValue({ for: water, use: new Water() })
+          .setClass({ for: cat, use: Cat, inject: [Fish, water] });
 
         assert.ok(container.resolve(cat).isCat, "Cat wasn't resolved");
       });
@@ -284,11 +284,11 @@ describe('ContainerImpl (registry agnostic)', () => {
   });
 
   it('supports destructuring assignments', () => {
-    const { useValue, useFactory, useClass, resolve, tryVerifyAll, verifyAll } = container;
+    const { setValue, setFactory, setClass, resolve, tryVerifyAll, verifyAll } = container;
 
-    useValue({ for: Water, use: new Water() });
-    useFactory({ for: Fish, use: () => new Fish(resolve(Water)) });
-    useClass({ for: Animal, use: Cat, inject: [Fish, Water] });
+    setValue({ for: Water, use: new Water() });
+    setFactory({ for: Fish, use: () => new Fish(resolve(Water)) });
+    setClass({ for: Animal, use: Cat, inject: [Fish, Water] });
 
     assert.ok((container.resolve(Animal) as Cat).isCat, "Cat wasn't resolved");
 
@@ -300,19 +300,19 @@ describe('ContainerImpl (registry agnostic)', () => {
 
 function registerResolvableCat(container: Container) {
   container
-    .useValue({ for: Water, use: new Water() })
-    .useFactory({ for: Fish, use: (r) => new Fish(r.resolve(Water)) })
-    .useClass({ for: Cat, use: Cat, inject: [Fish, Water] });
+    .setValue({ for: Water, use: new Water() })
+    .setFactory({ for: Fish, use: (r) => new Fish(r.resolve(Water)) })
+    .setClass({ for: Cat, use: Cat, inject: [Fish, Water] });
 }
 
 function registerUnresolvableCat(container: Container, errorToThrow = new Error('Ops!')) {
   container
-    .useValue({ for: Water, use: new Water() })
-    .useFactory({
+    .setValue({ for: Water, use: new Water() })
+    .setFactory({
       for: Fish,
       use: () => {
         throw errorToThrow;
       },
     })
-    .useClass({ for: Cat, use: Cat, inject: [Fish, Water] });
+    .setClass({ for: Cat, use: Cat, inject: [Fish, Water] });
 }

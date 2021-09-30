@@ -14,24 +14,24 @@ import { memoize } from './utils';
 const nameof = <T>(name: Extract<keyof T, string>): string => name;
 
 const functionsToBind = [
-  nameof<Container>('useValue'),
-  nameof<Container>('useFactory'),
-  nameof<Container>('useClass'),
+  nameof<Container>('setValue'),
+  nameof<Container>('setFactory'),
+  nameof<Container>('setClass'),
   nameof<Container>('resolve'),
   nameof<Container>('tryVerifyAll'),
   nameof<Container>('verifyAll'),
 ];
 
 export class ContainerImpl extends Container {
-  public useValue<T, TResult extends T>(provider: ValueProvider<T, TResult>): Container {
+  public setValue<T, TResult extends T>(provider: ValueProvider<T, TResult>): Container {
     return this.register(provider.for, () => provider.use);
   }
 
-  public useFactory<T, TResult extends T>(provider: ResolveProvider<T, TResult>): Container {
+  public setFactory<T, TResult extends T>(provider: ResolveProvider<T, TResult>): Container {
     return this.register(provider.for, provider.use, provider.singleton);
   }
 
-  public useClass(provider: ClassBaseProvider<unknown, Constructor<unknown>>): Container {
+  public setClass(provider: ClassBaseProvider<unknown, Constructor<unknown>>): Container {
     return this.register(
       provider.for,
       () => {
