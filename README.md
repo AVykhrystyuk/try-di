@@ -8,7 +8,7 @@ Try DI is a simple, typesafe and lightweight dependency injection container for 
 - **Safe.** It type-checks every mapping. Allows to verify all the mappings on CI.
 - **Fast.** `TODO: need to measure a sample`
 - **Simple.** It supports the minimum required and sufficient functionality for most apps.
-- **Small.** 828 bytes (minified and gzipped). No dependencies.
+- **Small.** 1.22 kilobytes (minified and gzipped). No dependencies.
   [Size Limit] controls the size.
 
 ```js
